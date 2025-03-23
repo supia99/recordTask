@@ -1,5 +1,4 @@
 #root {
-  max-width: 1280px;
   margin: 20px 8px;
   padding: 2rem;
   text-align: center;
@@ -8,6 +7,7 @@
 .register {
   display: flex;
   margin: 0 0 32px 0;
+  justify-content: space-around;
 }
 
 .add-button {
@@ -20,5 +20,17 @@
 
 .task-table-content {
   border: 1px solid rgb(160 160 160);
-    padding: 8px 10px;
+  padding: 8px;
+}
+
+.date-input {
+  width: 80px;
+}
+
+.time-input {
+  width: 80px;
+}
+
+.content-input {
+  width: 480px;
 }

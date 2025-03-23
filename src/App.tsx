@@ -85,12 +85,11 @@ function App() {
   return (
     <>
       <h1>タスク記録アプリ</h1>
+      <div className="register">現在時刻: {time}</div>
       <div className="register">
-        <div>現在時刻: {time}</div>
         <input
           type="button"
-          name="ADD"
-          value="ADD"
+          value="追加"
           className="add-button"
           onClick={() => addTask()}
         />
@@ -98,28 +97,28 @@ function App() {
         <input
           type="button"
           className="add-button"
-          value="download"
+          value="ダウンロード"
           onClick={() => download()}
         />
 
         <input
           type="button"
           className="add-button"
-          value="clear"
+          value="クリア"
           onClick={() => clear()}
         />
 
         <input
           type="button"
           className="add-button"
-          value="save"
+          value="一時保存"
           onClick={() => save()}
         />
 
         <input
           type="button"
           className="add-button"
-          value="importFromLocalStorage"
+          value="一時読み込み"
           onClick={() => importFromLocalStroage()}
         />
       </div>
@@ -127,13 +126,13 @@ function App() {
       <table className="task-table">
         <thead className="task-table">
           <tr>
-            <th scope="col" className="task-table-content">
+            <th scope="col" className="task-table-content ">
               日付
             </th>
             <th scope="col" className="task-table-content">
-              時間
+              時刻
             </th>
-            <th scope="col" className="task-table-content">
+            <th scope="col" className="task-table-content ">
               内容
             </th>
             <th scope="col" className="task-table-content">
@@ -150,6 +149,7 @@ function App() {
                     defaultValue={task.date}
                     onBlur={(e) => onInputChange(e)}
                     id={task.id + ":date"}
+                    className="date-input"
                   />
                 </td>
                 <td className="task-table-content">
@@ -157,6 +157,7 @@ function App() {
                     defaultValue={task.time}
                     onBlur={(e) => onInputChange(e)}
                     id={task.id + ":time"}
+                    className="time-input"
                   />
                 </td>
                 <td className="task-table-content">
@@ -164,6 +165,7 @@ function App() {
                     defaultValue={task.content}
                     onBlur={(e) => onInputChange(e)}
                     id={task.id + ":content"}
+                    className="content-input"
                   />
                 </td>
                 <td className="task-table-content">
