@@ -17,9 +17,14 @@ function App() {
   }, []);
 
   const addTask = () => {
+    const maxId = tasks.reduce(
+      (current, pTask) => (current = current < pTask.id ? pTask.id : current),
+      0
+    );
     setTasks([
       ...tasks,
       {
+        id: maxId + 1,
         date: new Date().toString(),
         time: time,
         content: "new task!!!",
@@ -50,11 +55,11 @@ function App() {
   };
 
   const importFromLocalStroage = () => {
-    const localStorageContent = localStorage.getItem(localStorageKey)
-    if(localStorageContent) {
-      setTasks(csvToTasks(localStorageContent))
+    const localStorageContent = localStorage.getItem(localStorageKey);
+    if (localStorageContent) {
+      setTasks(csvToTasks(localStorageContent));
     }
-  }
+  };
 
   return (
     <>
@@ -90,7 +95,7 @@ function App() {
           onClick={() => save()}
         />
 
-<input
+        <input
           type="button"
           className="add-button"
           value="importFromLocalStorage"
@@ -115,7 +120,7 @@ function App() {
         <tbody>
           {tasks.map((task) => {
             return (
-              <tr key={task.time}>
+              <tr key={task.id}>
                 <td className="task-table-content">
                   <input value={task.date} />
                 </td>
@@ -145,14 +150,14 @@ const tasksToCsv = (tasks: Task[]) => {
 };
 
 const csvToTasks = (csv: string): Task[] => {
-  const lows = csv.split("\n")
-  const columns = lows[0].split(",")
-  const bodyLows = lows.slice(1).filter(l => l !== "")
+  const lows = csv.split("\n");
+  const columns = lows[0].split(",");
+  const bodyLows = lows.slice(1).filter((l) => l !== "");
 
-  return bodyLows.map(bodyLow => 
+  return bodyLows.map((bodyLow) =>
     columns.reduce((acc, column, index) => {
-      const datas = bodyLow.split(",")
-      return { ...acc, [column]: datas[index]}
-    }, {}) 
-  ) as Task[]
-}
+      const datas = bodyLow.split(",");
+      return { ...acc, [column]: datas[index] };
+    }, {})
+  ) as Task[];
+};
