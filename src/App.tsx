@@ -65,12 +65,18 @@ function App() {
   };
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value, e.target.id);
     const [id, columnHeader] = e.target.id.split(":");
     const copiedTasks = [...tasks];
     const targetTask = copiedTasks[Number(id)];
     targetTask[columnHeader] = e.target.value;
     setTasks(copiedTasks);
+  };
+
+  const deleteColumn = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("delete column")
+    const [id] = e.target.id.split(":");
+    const copied = [...tasks].filter((task) => task.id !== Number(id))
+    setTasks(copied);
   };
 
   return (
@@ -127,6 +133,9 @@ function App() {
             <th scope="col" className="task-table-content">
               内容
             </th>
+            <th scope="col" className="task-table-content">
+              削除
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -152,6 +161,13 @@ function App() {
                     defaultValue={task.content}
                     onBlur={(e) => onInputChange(e)}
                     id={task.id + ":content"}
+                  />
+                </td>
+                <td className="task-table-content">
+                  <input
+                    type="button"
+                    onClick={(e) => deleteColumn(e)}
+                    id={task.id + ":delete"}
                   />
                 </td>
               </tr>
