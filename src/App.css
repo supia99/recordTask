@@ -24,11 +24,7 @@
 }
 
 .date-input {
-  width: 80px;
-}
-
-.time-input {
-  width: 80px;
+  width: 160px;
 }
 
 .type-select {}

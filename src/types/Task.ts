@@ -1,7 +1,6 @@
 export type Task = {
   id: number;
   date: string;
-  time: string;
   type: string;
   content: string;
 }

@@ -37,8 +37,7 @@ function App() {
       ...tasks,
       {
         id: addId,
-        date: new Date().toLocaleDateString(),
-        time: time,
+        date: new Date().toISOString(),
         type: TASK_TYPE_OPTIONS[0].value,
         content: "",
       },
@@ -92,6 +91,18 @@ function App() {
     setTasks(copied);
   };
 
+  const sort = () => {
+    const tmpTasks = [...tasks].sort((a, b) => exchangeDate(a) - exchangeDate(b));
+    setTasks(tmpTasks);
+  };
+
+  const exchangeDate = (task: Task) => {
+    const d = (new Date(task.date)).valueOf()
+    const n = Number(d)
+    console.log(task.date, n, d)
+    return n
+  }
+
   return (
     <>
       <h1>タスク記録アプリ</h1>
@@ -131,16 +142,20 @@ function App() {
           value="一時読み込み"
           onClick={() => importFromLocalStroage()}
         />
+
+        <input
+          type="button"
+          className="add-button"
+          value="ソート"
+          onClick={() => sort()}
+        />
       </div>
 
       <table className="task-table">
         <thead className="task-table">
           <tr>
-            <th scope="col" className="task-table-content ">
-              日付
-            </th>
             <th scope="col" className="task-table-content">
-              時刻
+              開始時刻
             </th>
             <th scope="col" className="task-table-content">
               分類
@@ -163,14 +178,6 @@ function App() {
                     onBlur={(e) => onInputChange(e)}
                     id={task.id + ":date"}
                     className="date-input"
-                  />
-                </td>
-                <td className="task-table-content">
-                  <input
-                    defaultValue={task.time}
-                    onBlur={(e) => onInputChange(e)}
-                    id={task.id + ":time"}
-                    className="time-input"
                   />
                 </td>
                 <td className="task-table-content">
