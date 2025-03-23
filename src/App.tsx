@@ -14,6 +14,7 @@ const TASK_TYPE_OPTIONS = [
 function App() {
   const [time, setTime] = useState<string>(new Date().toLocaleDateString());
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [finishDate, setFinishDate] = useState<string>("");
 
   const localStorageKey = "tasks";
 
@@ -92,21 +93,27 @@ function App() {
   };
 
   const sort = () => {
-    const tmpTasks = [...tasks].sort((a, b) => exchangeDate(a) - exchangeDate(b));
+    const tmpTasks = [...tasks].sort(
+      (a, b) => exchangeDate(a) - exchangeDate(b)
+    );
     setTasks(tmpTasks);
   };
 
   const exchangeDate = (task: Task) => {
-    const d = (new Date(task.date)).valueOf()
-    const n = Number(d)
-    return n
-  }
+    const d = new Date(task.date).valueOf();
+    const n = Number(d);
+    return n;
+  };
+
+  const registerFinishTime = () => {
+    setFinishDate(new Date().toISOString());
+  };
 
   return (
     <>
       <h1>タスク記録アプリ</h1>
-      <div className="register">現在時刻: {time}</div>
-      <div className="register">
+      <div className="menu">現在時刻: {time}</div>
+      <div className="menu">
         <input
           type="button"
           value="追加"
@@ -215,6 +222,16 @@ function App() {
           })}
         </tbody>
       </table>
+
+      <div className="footer">
+        <input
+          type="button"
+          value="終わり"
+          className="add-button"
+          onClick={() => registerFinishTime()}
+        />
+        {finishDate}
+      </div>
     </>
   );
 }

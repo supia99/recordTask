@@ -4,7 +4,7 @@
   text-align: center;
 }
 
-.register {
+.menu {
   display: flex;
   margin: 0 0 32px 0;
   justify-content: space-around;
@@ -24,11 +24,19 @@
 }
 
 .date-input {
-  width: 160px;
+  width: 200px;
 }
 
-.type-select {}
+.type-select {
+}
 
 .content-input {
   width: 480px;
+}
+
+.footer {
+  padding: 16px;
+  width: 400px;
+  display: flex;
+  justify-content: space-around;
 }
