@@ -25,7 +25,7 @@ function App() {
       ...tasks,
       {
         id: maxId + 1,
-        date: new Date().toString(),
+        date: new Date().toLocaleDateString(),
         time: time,
         content: "new task!!!",
       },
