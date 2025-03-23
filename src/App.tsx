@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { Task } from "./types/Task";
+import { Task, taskHeaderToCsv, taskToCsv } from "./types/Task";
 
 function App() {
   const [time, setTime] = useState<string>(new Date().toLocaleDateString());
   const [tasks, setTasks] = useState<Task[]>([]);
+
+  const localStorageKey = "tasks";
 
   // timer用
   useEffect(() => {
@@ -18,7 +20,7 @@ function App() {
     setTasks([
       ...tasks,
       {
-        date: new Date().toLocaleDateString(),
+        date: new Date().toString(),
         time: time,
         content: "new task!!!",
       },
@@ -27,20 +29,7 @@ function App() {
 
   const download = () => {
     if (tasks.length) {
-      const header =
-        Object.entries(tasks[0])
-          .map((value) => value[0])
-          .join(",") + "\n";
-      const content = tasks.reduce(
-        (current, task) =>
-          current +
-          Object.entries(task)
-            .map((value) => value[1])
-            .join(",") +
-          "\n",
-        header
-      );
-
+      const content = tasksToCsv(tasks);
       const blob = new Blob([content], { type: "text/plain" });
       const jsonURL = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -55,6 +44,17 @@ function App() {
   const clear = () => {
     setTasks([]);
   };
+
+  const save = () => {
+    localStorage.setItem(localStorageKey, tasksToCsv(tasks));
+  };
+
+  const importFromLocalStroage = () => {
+    const localStorageContent = localStorage.getItem(localStorageKey)
+    if(localStorageContent) {
+      setTasks(csvToTasks(localStorageContent))
+    }
+  }
 
   return (
     <>
@@ -81,6 +81,20 @@ function App() {
           className="add-button"
           value="clear"
           onClick={() => clear()}
+        />
+
+        <input
+          type="button"
+          className="add-button"
+          value="save"
+          onClick={() => save()}
+        />
+
+<input
+          type="button"
+          className="add-button"
+          value="importFromLocalStorage"
+          onClick={() => importFromLocalStroage()}
         />
       </div>
 
@@ -121,3 +135,24 @@ function App() {
 }
 
 export default App;
+
+const tasksToCsv = (tasks: Task[]) => {
+  const header = taskHeaderToCsv(tasks[0]) + "\n";
+  return tasks.reduce(
+    (current, task) => current + taskToCsv(task) + "\n",
+    header
+  );
+};
+
+const csvToTasks = (csv: string): Task[] => {
+  const lows = csv.split("\n")
+  const columns = lows[0].split(",")
+  const bodyLows = lows.slice(1).filter(l => l !== "")
+
+  return bodyLows.map(bodyLow => 
+    columns.reduce((acc, column, index) => {
+      const datas = bodyLow.split(",")
+      return { ...acc, [column]: datas[index]}
+    }, {}) 
+  ) as Task[]
+}
