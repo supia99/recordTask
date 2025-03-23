@@ -5,7 +5,6 @@ import { Task } from "./types/Task";
 function App() {
   const [time, setTime] = useState<string>(new Date().toLocaleDateString());
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [testContent, setTestContent] = useState<string>("");
 
   // timer用
   useEffect(() => {
@@ -27,19 +26,34 @@ function App() {
   };
 
   const download = () => {
-    tasks.forEach((element) => {
-      console.log(`time: ${element.time}`);
-    });
-    const content = tasks.reduce(
-      (current, task) =>
-        current +
-        Object.entries(task)
-          .map((value) => value[1])
-          .join(",") +
-        "\n",
-      ""
-    );
-    setTestContent(content);
+    if (tasks.length) {
+      const header =
+        Object.entries(tasks[0])
+          .map((value) => value[0])
+          .join(",") + "\n";
+      const content = tasks.reduce(
+        (current, task) =>
+          current +
+          Object.entries(task)
+            .map((value) => value[1])
+            .join(",") +
+          "\n",
+        header
+      );
+
+      const blob = new Blob([content], { type: "text/plain" });
+      const jsonURL = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      document.body.appendChild(link);
+      link.href = jsonURL;
+      link.setAttribute("download", "output.txt");
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const clear = () => {
+    setTasks([]);
   };
 
   return (
@@ -60,6 +74,13 @@ function App() {
           className="add-button"
           value="download"
           onClick={() => download()}
+        />
+
+        <input
+          type="button"
+          className="add-button"
+          value="clear"
+          onClick={() => clear()}
         />
       </div>
 
@@ -95,7 +116,6 @@ function App() {
           })}
         </tbody>
       </table>
-      {testContent}
     </>
   );
 }
