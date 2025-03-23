@@ -17,17 +17,20 @@ function App() {
   }, []);
 
   const addTask = () => {
-    const maxId = tasks.reduce(
-      (current, pTask) => (current = current < pTask.id ? pTask.id : current),
-      0
-    );
+    const addId = tasks.length
+      ? tasks.reduce(
+          (current, pTask) =>
+            (current = current < pTask.id ? pTask.id : current),
+          0
+        ) + 1
+      : 0;
     setTasks([
       ...tasks,
       {
-        id: maxId + 1,
+        id: addId,
         date: new Date().toLocaleDateString(),
         time: time,
-        content: "new task!!!",
+        content: "",
       },
     ]);
   };
@@ -59,6 +62,15 @@ function App() {
     if (localStorageContent) {
       setTasks(csvToTasks(localStorageContent));
     }
+  };
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value, e.target.id);
+    const [id, columnHeader] = e.target.id.split(":");
+    const copiedTasks = [...tasks];
+    const targetTask = copiedTasks[Number(id)];
+    targetTask[columnHeader] = e.target.value;
+    setTasks(copiedTasks);
   };
 
   return (
@@ -122,13 +134,25 @@ function App() {
             return (
               <tr key={task.id}>
                 <td className="task-table-content">
-                  <input value={task.date} />
+                  <input
+                    defaultValue={task.date}
+                    onBlur={(e) => onInputChange(e)}
+                    id={task.id + ":date"}
+                  />
                 </td>
                 <td className="task-table-content">
-                  <input value={task.time} />
+                  <input
+                    defaultValue={task.time}
+                    onBlur={(e) => onInputChange(e)}
+                    id={task.id + ":time"}
+                  />
                 </td>
                 <td className="task-table-content">
-                  <input value={task.content} />
+                  <input
+                    defaultValue={task.content}
+                    onBlur={(e) => onInputChange(e)}
+                    id={task.id + ":content"}
+                  />
                 </td>
               </tr>
             );
