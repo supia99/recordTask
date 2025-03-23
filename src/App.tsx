@@ -69,7 +69,6 @@ function App() {
     const copiedTasks = [...tasks];
     const targetTask = copiedTasks[Number(id)];
     const value = e.target?.value
-    console.log(value)
     if(value) {
       targetTask[columnHeader] = value;
       setTasks(copiedTasks);
