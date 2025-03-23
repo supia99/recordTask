@@ -2,6 +2,15 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { Task, taskHeaderToCsv, taskToCsv } from "./types/Task";
 
+const TASK_TYPE_OPTIONS = [
+  { value: "other", display: "その他" },
+  { value: "us", display: "US" },
+  { value: "review", display: "レビュー" },
+  { value: "alert", display: "アラート対応" },
+  { value: "maintenance", display: "保守対応" },
+  { value: "follow", display: "フォロー" },
+];
+
 function App() {
   const [time, setTime] = useState<string>(new Date().toLocaleDateString());
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -30,6 +39,7 @@ function App() {
         id: addId,
         date: new Date().toLocaleDateString(),
         time: time,
+        type: TASK_TYPE_OPTIONS[0].value,
         content: "",
       },
     ]);
@@ -68,17 +78,17 @@ function App() {
     const [id, columnHeader] = e.target.id.split(":");
     const copiedTasks = [...tasks];
     const targetTask = copiedTasks[Number(id)];
-    const value = e.target?.value
-    if(value) {
+    const value = e.target?.value;
+    if (value) {
       targetTask[columnHeader] = value;
       setTasks(copiedTasks);
     }
   };
 
   const deleteColumn = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("delete column")
+    console.log("delete column");
     const [id] = e.target.id.split(":");
-    const copied = [...tasks].filter((task) => task.id !== Number(id))
+    const copied = [...tasks].filter((task) => task.id !== Number(id));
     setTasks(copied);
   };
 
@@ -132,6 +142,9 @@ function App() {
             <th scope="col" className="task-table-content">
               時刻
             </th>
+            <th scope="col" className="task-table-content">
+              分類
+            </th>
             <th scope="col" className="task-table-content ">
               内容
             </th>
@@ -159,6 +172,22 @@ function App() {
                     id={task.id + ":time"}
                     className="time-input"
                   />
+                </td>
+                <td className="task-table-content">
+                  <select
+                    defaultValue={task.type}
+                    onBlur={(e) => onInputChange(e)}
+                    className="type-select"
+                    id={task.id + ":type"}
+                  >
+                    {TASK_TYPE_OPTIONS.map((typeOption) => {
+                      return (
+                        <option value={typeOption.value} id={typeOption.value}>
+                          {typeOption.display}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </td>
                 <td className="task-table-content">
                   <input
