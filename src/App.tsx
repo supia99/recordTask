@@ -68,8 +68,12 @@ function App() {
     const [id, columnHeader] = e.target.id.split(":");
     const copiedTasks = [...tasks];
     const targetTask = copiedTasks[Number(id)];
-    targetTask[columnHeader] = e.target.value;
-    setTasks(copiedTasks);
+    const value = e.target?.value
+    console.log(value)
+    if(value) {
+      targetTask[columnHeader] = value;
+      setTasks(copiedTasks);
+    }
   };
 
   const deleteColumn = (e: React.ChangeEvent<HTMLInputElement>) => {
