@@ -99,7 +99,6 @@ function App() {
   const exchangeDate = (task: Task) => {
     const d = (new Date(task.date)).valueOf()
     const n = Number(d)
-    console.log(task.date, n, d)
     return n
   }
 
