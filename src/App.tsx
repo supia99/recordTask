@@ -47,7 +47,8 @@ function App() {
 
   const download = () => {
     if (tasks.length) {
-      const content = tasksToCsv(tasks);
+      const outputTasks = addRunMinute(tasks, finishDate);
+      const content = tasksToCsv(outputTasks);
       const blob = new Blob([content], { type: "text/plain" });
       const jsonURL = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -258,3 +259,17 @@ const csvToTasks = (csv: string): Task[] => {
     }, {})
   ) as Task[];
 };
+
+const addRunMinute = (tasks: Task[], finishTime: string) => {
+  return tasks.map((task, index) => {
+    task.runTimeMinute =
+      index === tasks.length - 1
+        ? subToMinute(finishTime, task.date)
+        : subToMinute(tasks[index + 1].date, task.date);
+    return task;
+  });
+};
+
+// Dateの差となる分を出す
+const subToMinute = (prev: string, next: string) =>
+  Math.floor((new Date(prev) - new Date(next)) / 60_000);

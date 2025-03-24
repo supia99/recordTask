@@ -3,6 +3,7 @@ export type Task = {
   date: string;
   type: string;
   content: string;
+  runTimeMinute?: number;
 }
 
 export const taskHeaderToCsv = (task: Task) => {
