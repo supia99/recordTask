@@ -54,7 +54,10 @@ function App() {
       const link = document.createElement("a");
       document.body.appendChild(link);
       link.href = jsonURL;
-      link.setAttribute("download", "output.txt");
+      link.setAttribute(
+        "download",
+        `tasks_${new Date(finishDate).toLocaleDateString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"}).replace(/\//g, "")}.csv` 
+      );
       link.click();
       document.body.removeChild(link);
     }
@@ -183,8 +186,9 @@ function App() {
                   <input
                     defaultValue={toLocaleTimeString(task.date)}
                     onBlur={(e) => {
-                      e.target.value = fromLocaleTimeString(e.target.value)
-                      onInputChange(e)}}
+                      e.target.value = fromLocaleTimeString(e.target.value);
+                      onInputChange(e);
+                    }}
                     id={task.id + ":date"}
                     className="date-input"
                   />
@@ -233,7 +237,8 @@ function App() {
           className="add-button"
           onClick={() => registerFinishTime()}
         />
-        {new Date(finishDate).toLocaleDateString()} {new Date(finishDate).toLocaleTimeString()}
+        {new Date(finishDate).toLocaleDateString()}{" "}
+        {new Date(finishDate).toLocaleTimeString()}
       </div>
     </>
   );
@@ -276,8 +281,10 @@ const addRunMinute = (tasks: Task[], finishTime: string) => {
 const subToMinute = (prev: string, next: string) =>
   Math.floor((new Date(prev) - new Date(next)) / 60_000);
 
-const toLocaleTimeString = (date: string) =>  `${new Date(date).toLocaleDateString()} ${new Date(date).toLocaleTimeString()}`
+const toLocaleTimeString = (date: string) =>
+  `${new Date(date).toLocaleDateString()} ${new Date(
+    date
+  ).toLocaleTimeString()}`;
 const fromLocaleTimeString = (localeDate: string) => {
-  return new Date(localeDate.replace(" ", "T")).toISOString()
-  
-}
+  return new Date(localeDate.replace(" ", "T")).toISOString();
+};
