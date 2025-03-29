@@ -181,8 +181,10 @@ function App() {
               <tr key={task.id}>
                 <td className="task-table-content">
                   <input
-                    defaultValue={task.date}
-                    onBlur={(e) => onInputChange(e)}
+                    defaultValue={toLocaleTimeString(task.date)}
+                    onBlur={(e) => {
+                      e.target.value = fromLocaleTimeString(e.target.value)
+                      onInputChange(e)}}
                     id={task.id + ":date"}
                     className="date-input"
                   />
@@ -231,7 +233,7 @@ function App() {
           className="add-button"
           onClick={() => registerFinishTime()}
         />
-        {finishDate}
+        {new Date(finishDate).toLocaleDateString()} {new Date(finishDate).toLocaleTimeString()}
       </div>
     </>
   );
@@ -273,3 +275,9 @@ const addRunMinute = (tasks: Task[], finishTime: string) => {
 // Dateの差となる分を出す
 const subToMinute = (prev: string, next: string) =>
   Math.floor((new Date(prev) - new Date(next)) / 60_000);
+
+const toLocaleTimeString = (date: string) =>  `${new Date(date).toLocaleDateString()} ${new Date(date).toLocaleTimeString()}`
+const fromLocaleTimeString = (localeDate: string) => {
+  return new Date(localeDate.replace(" ", "T")).toISOString()
+  
+}
