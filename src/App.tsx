@@ -94,7 +94,8 @@ function App() {
     const targetTask = copiedTasks[Number(id)];
     const value = e.target?.value;
     if (value) {
-      targetTask[columnHeader] = value;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (targetTask as any)[columnHeader] = value;
       setTasks(copiedTasks);
     }
   };
@@ -105,7 +106,7 @@ function App() {
       | React.MouseEvent<HTMLInputElement, MouseEvent>
   ) => {
     console.log("delete column");
-    const [id] = e.target.id.split(":");
+    const [id] = (e.target as HTMLInputElement).id.split(":");
     const copied = [...tasks].filter((task) => task.id !== Number(id));
     setTasks(copied);
   };
