@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { Task, taskHeaderToCsv, taskToCsv } from "./types/Task";
+import {
+  Task,
+  taskHeaderToCsv,
+  taskToCsv,
+  toLocaleTimeString,
+} from "./types/Task";
 
 const TASK_TYPE_OPTIONS = [
   { value: "other", display: "その他" },
@@ -38,7 +43,7 @@ function App() {
       ...tasks,
       {
         id: addId,
-        date: new Date().toISOString(),
+        date: toLocaleTimeString(new Date().toISOString()),
         type: TASK_TYPE_OPTIONS[0].value,
         content: "",
       },
@@ -93,6 +98,7 @@ function App() {
     const copiedTasks = [...tasks];
     const targetTask = copiedTasks[Number(id)];
     const value = e.target?.value;
+    console.log(`columnHeader: ${columnHeader}, value: ${value}`);
     if (value) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (targetTask as any)[columnHeader] = value;
@@ -119,7 +125,7 @@ function App() {
   };
 
   const exchangeDate = (task: Task) => {
-    const d = new Date(task.date).valueOf();
+    const d = new Date(toLocaleTimeString(task.date)).valueOf();
     const n = Number(d);
     return n;
   };
@@ -199,9 +205,9 @@ function App() {
               <tr key={task.id}>
                 <td className="task-table-content">
                   <input
-                    defaultValue={toLocaleTimeString(task.date)}
+                    defaultValue={task.date}
                     onBlur={(e) => {
-                      e.target.value = fromLocaleTimeString(e.target.value);
+                      // e.target.value = fromLocaleTimeString(e.target.value);
                       onInputChange(e);
                     }}
                     id={task.id + ":date"}
@@ -252,8 +258,10 @@ function App() {
           className="add-button"
           onClick={() => registerFinishTime()}
         />
-        {finishDate && new Date(finishDate).toLocaleDateString()}{" "}
-        {finishDate && new Date(finishDate).toLocaleTimeString()}
+        {finishDate &&
+          `${new Date(finishDate).toLocaleDateString()} ${new Date(
+            finishDate
+          ).toLocaleTimeString()}`}
       </div>
     </>
   );
@@ -297,12 +305,4 @@ const subToMinute = (prev: string, next: string) => {
   const prevTime = new Date(prev).getTime();
   const nextTime = new Date(next).getTime();
   return Math.floor((prevTime - nextTime) / 60_000);
-};
-
-const toLocaleTimeString = (date: string) =>
-  `${new Date(date).toLocaleDateString()} ${new Date(
-    date
-  ).toLocaleTimeString()}`;
-const fromLocaleTimeString = (localeDate: string) => {
-  return new Date(localeDate.replace(" ", "T")).toISOString();
 };
