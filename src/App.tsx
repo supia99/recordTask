@@ -78,7 +78,7 @@ function App() {
     }
   };
 
-  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLSelectElement, Element>) => {
     const [id, columnHeader] = e.target.id.split(":");
     const copiedTasks = [...tasks];
     const targetTask = copiedTasks[Number(id)];
@@ -89,7 +89,7 @@ function App() {
     }
   };
 
-  const deleteColumn = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const deleteColumn = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
     console.log("delete column");
     const [id] = e.target.id.split(":");
     const copied = [...tasks].filter((task) => task.id !== Number(id));
@@ -237,8 +237,8 @@ function App() {
           className="add-button"
           onClick={() => registerFinishTime()}
         />
-        {new Date(finishDate).toLocaleDateString()}{" "}
-        {new Date(finishDate).toLocaleTimeString()}
+        {finishDate && new Date(finishDate).toLocaleDateString()}{" "}
+        {finishDate && new Date(finishDate).toLocaleTimeString()}
       </div>
     </>
   );
@@ -278,8 +278,11 @@ const addRunMinute = (tasks: Task[], finishTime: string) => {
 };
 
 // Dateの差となる分を出す
-const subToMinute = (prev: string, next: string) =>
-  Math.floor((new Date(prev) - new Date(next)) / 60_000);
+const subToMinute = (prev: string, next: string) => {
+  const prevTime = new Date(prev).getTime();
+  const nextTime = new Date(next).getTime();
+  return Math.floor((prevTime - nextTime) / 60_000);
+}
 
 const toLocaleTimeString = (date: string) =>
   `${new Date(date).toLocaleDateString()} ${new Date(
