@@ -284,8 +284,12 @@ const csvToTasks = (csv: string): Task[] => {
   return bodyLows.map((bodyLow) =>
     columns.reduce((acc, column, index) => {
       const datas = bodyLow.split(",");
-      console.log(`column: ${column} datas[index]:${datas[index]}`)
-      return { ...acc, [column]: (column === "date" ? toLocaleTimeString(datas[index]) : datas[index]) };
+      console.log(`column: ${column} datas[index]:${datas[index]}`);
+      return {
+        ...acc,
+        [column]:
+          column === "date" ? toLocaleTimeString(datas[index]) : datas[index],
+      };
     }, {})
   ) as Task[];
 };
