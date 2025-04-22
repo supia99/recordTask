@@ -207,7 +207,6 @@ function App() {
                   <input
                     defaultValue={task.date}
                     onBlur={(e) => {
-                      // e.target.value = fromLocaleTimeString(e.target.value);
                       onInputChange(e);
                     }}
                     id={task.id + ":date"}
@@ -285,7 +284,8 @@ const csvToTasks = (csv: string): Task[] => {
   return bodyLows.map((bodyLow) =>
     columns.reduce((acc, column, index) => {
       const datas = bodyLow.split(",");
-      return { ...acc, [column]: datas[index] };
+      console.log(`column: ${column} datas[index]:${datas[index]}`)
+      return { ...acc, [column]: (column === "date" ? toLocaleTimeString(datas[index]) : datas[index]) };
     }, {})
   ) as Task[];
 };
