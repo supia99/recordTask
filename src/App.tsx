@@ -106,6 +106,7 @@ function App() {
     }
   };
 
+  // FIXME: 一時読み込み後だと削除できない
   const deleteColumn = (
     e:
       | React.ChangeEvent<HTMLInputElement>
