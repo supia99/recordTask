@@ -36,9 +36,9 @@ function App() {
       ? tasks.reduce(
           (current, pTask) =>
             (current = current < pTask.id ? pTask.id : current),
-          0
+          1
         ) + 1
-      : 0;
+      : 1;
     setTasks([
       ...tasks,
       {
@@ -106,14 +106,13 @@ function App() {
     }
   };
 
-  // FIXME: 一時読み込み後だと削除できない
   const deleteColumn = (
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.MouseEvent<HTMLInputElement, MouseEvent>
   ) => {
-    console.log("delete column");
     const [id] = (e.target as HTMLInputElement).id.split(":");
+    console.log(`delete column: ${id}`);
     const copied = [...tasks].filter((task) => task.id !== Number(id));
     setTasks(copied);
   };
