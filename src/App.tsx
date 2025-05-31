@@ -289,7 +289,7 @@ const csvToTasks = (csv: string): Task[] => {
       return {
         ...acc,
         [column]:
-          column === "date" ? toLocaleTimeString(datas[index]) : datas[index],
+          column === "date" ? toLocaleTimeString(datas[index]) : Number(datas[index]) || datas[index],
       };
     }, {})
   ) as Task[];
