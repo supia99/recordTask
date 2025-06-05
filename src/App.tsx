@@ -96,7 +96,7 @@ function App() {
   ) => {
     const [id, columnHeader] = e.target.id.split(":");
     const copiedTasks = [...tasks];
-    const targetTask = copiedTasks.filter((task) => task.id === Number(id));
+    const targetTask = copiedTasks.find((task) => task.id === Number(id));
     const value = e.target?.value;
     console.log(`columnHeader: ${columnHeader}, value: ${value}`);
     if (value) {
