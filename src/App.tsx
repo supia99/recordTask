@@ -14,6 +14,7 @@ const TASK_TYPE_OPTIONS = [
   { value: "alert", display: "アラート対応" },
   { value: "maintenance", display: "保守対応" },
   { value: "follow", display: "フォロー" },
+  { value: "azure", display: "Azure移行" },
 ];
 
 function App() {
