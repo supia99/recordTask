@@ -18,7 +18,7 @@ const TASK_TYPE_OPTIONS = [
 ];
 
 function App() {
-  const [time, setTime] = useState<string>(new Date().toLocaleDateString());
+  const [time, setTime] = useState<string>(toLocaleTimeString(new Date().toISOString()));
   const [tasks, setTasks] = useState<Task[]>([]);
   const [finishDate, setFinishDate] = useState<string>("");
 
@@ -27,7 +27,7 @@ function App() {
   // timer用
   useEffect(() => {
     const timerId = setInterval(() => {
-      setTime(new Date().toLocaleTimeString());
+      setTime(toLocaleTimeString(new Date().toISOString()));
     }, 1_000);
     return () => clearInterval(timerId);
   }, []);
@@ -258,10 +258,7 @@ function App() {
           className="add-button"
           onClick={() => registerFinishTime()}
         />
-        {finishDate &&
-          `${new Date(finishDate).toLocaleDateString()} ${new Date(
-            finishDate
-          ).toLocaleTimeString()}`}
+        {finishDate && toLocaleTimeString(finishDate)}
       </div>
     </>
   );
