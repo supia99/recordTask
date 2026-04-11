@@ -21,6 +21,7 @@ function App() {
   const [time, setTime] = useState<string>(toLocaleTimeString(new Date().toISOString()));
   const [tasks, setTasks] = useState<Task[]>([]);
   const [finishDate, setFinishDate] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   const localStorageKey = "tasks";
 
@@ -33,45 +34,55 @@ function App() {
   }, []);
 
   const addTask = () => {
-    const addId = tasks.length
-      ? tasks.reduce(
-          (current, pTask) =>
-            (current = current < pTask.id ? pTask.id : current),
-          1
-        ) + 1
-      : 1;
-    setTasks([
-      ...tasks,
-      {
-        id: addId,
-        date: toLocaleTimeString(new Date().toISOString()),
-        type: TASK_TYPE_OPTIONS[0].value,
-        content: "",
-      },
-    ]);
+    try {
+      const addId = tasks.length
+        ? tasks.reduce(
+            (current, pTask) =>
+              (current = current < pTask.id ? pTask.id : current),
+            1
+          ) + 1
+        : 1;
+      setTasks([
+        ...tasks,
+        {
+          id: addId,
+          date: toLocaleTimeString(new Date().toISOString()),
+          type: TASK_TYPE_OPTIONS[0].value,
+          content: "",
+        },
+      ]);
+      setError("");
+    } catch (err) {
+      setError(`タスク追加エラー: ${err instanceof Error ? err.message : String(err)}`);
+    }
   };
 
   const download = () => {
-    if (tasks.length) {
-      const outputTasks = addRunMinute(tasks, finishDate);
-      const content = tasksToCsv(outputTasks);
-      const blob = new Blob([content], { type: "text/plain" });
-      const jsonURL = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      document.body.appendChild(link);
-      link.href = jsonURL;
-      link.setAttribute(
-        "download",
-        `tasks_${new Date(finishDate)
-          .toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          })
-          .replace(/\//g, "")}.csv`
-      );
-      link.click();
-      document.body.removeChild(link);
+    try {
+      if (tasks.length) {
+        const outputTasks = addRunMinute(tasks, finishDate);
+        const content = tasksToCsv(outputTasks);
+        const blob = new Blob([content], { type: "text/plain" });
+        const jsonURL = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        document.body.appendChild(link);
+        link.href = jsonURL;
+        link.setAttribute(
+          "download",
+          `tasks_${new Date(finishDate)
+            .toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
+            .replace(/\//g, "")}.csv`
+        );
+        link.click();
+        document.body.removeChild(link);
+        setError("");
+      }
+    } catch (err) {
+      setError(`ダウンロードエラー: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 
@@ -80,13 +91,23 @@ function App() {
   };
 
   const save = () => {
-    localStorage.setItem(localStorageKey, tasksToCsv(tasks));
+    try {
+      localStorage.setItem(localStorageKey, tasksToCsv(tasks));
+      setError("");
+    } catch (err) {
+      setError(`保存エラー: ${err instanceof Error ? err.message : String(err)}`);
+    }
   };
 
   const importFromLocalStroage = () => {
-    const localStorageContent = localStorage.getItem(localStorageKey);
-    if (localStorageContent) {
-      setTasks(csvToTasks(localStorageContent));
+    try {
+      const localStorageContent = localStorage.getItem(localStorageKey);
+      if (localStorageContent) {
+        setTasks(csvToTasks(localStorageContent));
+        setError("");
+      }
+    } catch (err) {
+      setError(`読み込みエラー: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 
@@ -95,15 +116,20 @@ function App() {
       | React.ChangeEvent<HTMLInputElement>
       | React.FocusEvent<HTMLSelectElement, Element>
   ) => {
-    const [id, columnHeader] = e.target.id.split(":");
-    const copiedTasks = [...tasks];
-    const targetTask = copiedTasks.find((task) => task.id === Number(id));
-    const value = e.target?.value;
-    console.log(`columnHeader: ${columnHeader}, value: ${value}`);
-    if (value) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (targetTask as any)[columnHeader] = value;
-      setTasks(copiedTasks);
+    try {
+      const [id, columnHeader] = e.target.id.split(":");
+      const copiedTasks = [...tasks];
+      const targetTask = copiedTasks.find((task) => task.id === Number(id));
+      const value = e.target?.value;
+      console.log(`columnHeader: ${columnHeader}, value: ${value}`);
+      if (value) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (targetTask as any)[columnHeader] = value;
+        setTasks(copiedTasks);
+      }
+      setError("");
+    } catch (err) {
+      setError(`入力変更エラー: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 
@@ -112,17 +138,27 @@ function App() {
       | React.ChangeEvent<HTMLInputElement>
       | React.MouseEvent<HTMLInputElement, MouseEvent>
   ) => {
-    const [id] = (e.target as HTMLInputElement).id.split(":");
-    console.log(`delete column: ${id}`);
-    const copied = [...tasks].filter((task) => task.id !== Number(id));
-    setTasks(copied);
+    try {
+      const [id] = (e.target as HTMLInputElement).id.split(":");
+      console.log(`delete column: ${id}`);
+      const copied = [...tasks].filter((task) => task.id !== Number(id));
+      setTasks(copied);
+      setError("");
+    } catch (err) {
+      setError(`削除エラー: ${err instanceof Error ? err.message : String(err)}`);
+    }
   };
 
   const sort = () => {
-    const tmpTasks = [...tasks].sort(
-      (a, b) => exchangeDate(a) - exchangeDate(b)
-    );
-    setTasks(tmpTasks);
+    try {
+      const tmpTasks = [...tasks].sort(
+        (a, b) => exchangeDate(a) - exchangeDate(b)
+      );
+      setTasks(tmpTasks);
+      setError("");
+    } catch (err) {
+      setError(`ソートエラー: ${err instanceof Error ? err.message : String(err)}`);
+    }
   };
 
   const exchangeDate = (task: Task) => {
@@ -132,13 +168,24 @@ function App() {
   };
 
   const registerFinishTime = () => {
-    setFinishDate(new Date().toISOString());
+    try {
+      setFinishDate(new Date().toISOString());
+      setError("");
+    } catch (err) {
+      setError(`終了時刻登録エラー: ${err instanceof Error ? err.message : String(err)}`);
+    }
   };
 
   return (
     <>
       <h1>タスク記録アプリ</h1>
       <div className="menu">現在時刻: {time}</div>
+      {error && (
+        <div className="error-message" style={{ color: "red", padding: "10px", backgroundColor: "#ffe6e6", margin: "10px 0", borderRadius: "4px" }}>
+          {error}
+          <button onClick={() => setError("")} style={{ marginLeft: "10px", padding: "2px 8px" }}>×</button>
+        </div>
+      )}
       <div className="menu">
         <input
           type="button"
