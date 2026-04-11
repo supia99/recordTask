@@ -286,10 +286,12 @@ function App() {
                   />
                 </td>
                 <td className="task-table-content">
-                  <input
-                    type="button"
+                  <img
+                    src="/delete-icon.svg"
+                    alt="削除"
                     onClick={(e) => deleteColumn(e)}
                     id={task.id + ":delete"}
+                    style={{ cursor: "pointer", width: "20px", height: "20px" }}
                   />
                 </td>
               </tr>
