@@ -135,11 +135,11 @@ function App() {
 
   const deleteColumn = (
     e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.MouseEvent<HTMLInputElement, MouseEvent>
+      | React.ChangeEvent<HTMLImageElement>
+      | React.MouseEvent<HTMLImageElement, MouseEvent>
   ) => {
     try {
-      const [id] = (e.target as HTMLInputElement).id.split(":");
+      const [id] = (e.target as HTMLImageElement).id.split(":");
       console.log(`delete column: ${id}`);
       const copied = [...tasks].filter((task) => task.id !== Number(id));
       setTasks(copied);
