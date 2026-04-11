@@ -46,3 +46,10 @@
   width: 20px;
   height: 20px;
 }
+
+.finish-time-input {
+  width: 140px;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

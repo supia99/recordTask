@@ -176,6 +176,29 @@ function App() {
     }
   };
 
+  const onFinishDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const value = e.target.value;
+      if (value) {
+        // YYYY/MM/DD hh:mm形式から ISO形式に変換
+        const [datePart, timePart] = value.split(' ');
+        const [year, month, day] = datePart.split('/');
+        const [hour, minute] = timePart.split(':');
+        const isoString = new Date(
+          parseInt(year),
+          parseInt(month) - 1,
+          parseInt(day),
+          parseInt(hour),
+          parseInt(minute)
+        ).toISOString();
+        setFinishDate(isoString);
+      }
+      setError("");
+    } catch (err) {
+      setError(`終了時刻変更エラー: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  };
+
   return (
     <>
       <h1>タスク記録アプリ</h1>
@@ -307,7 +330,13 @@ function App() {
           className="add-button"
           onClick={() => registerFinishTime()}
         />
-        {finishDate && toLocaleTimeString(finishDate)}
+        <input
+          type="text"
+          placeholder="YYYY/MM/DD hh:mm"
+          defaultValue={finishDate ? toLocaleTimeString(finishDate) : ""}
+          onBlur={(e) => onFinishDateChange(e)}
+          className="finish-time-input"
+        />
       </div>
     </>
   );
