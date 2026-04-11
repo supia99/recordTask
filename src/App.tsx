@@ -291,7 +291,7 @@ function App() {
                     alt="削除"
                     onClick={(e) => deleteColumn(e)}
                     id={task.id + ":delete"}
-                    style={{ cursor: "pointer", width: "20px", height: "20px" }}
+                    className="delete-icon"
                   />
                 </td>
               </tr>
