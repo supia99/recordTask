@@ -23,6 +23,22 @@
   padding: 8px;
 }
 
+.task-header-start-date {
+  width: 142px;
+}
+
+.task-header-type {
+  width: 120px;
+}
+
+.task-header-content {
+  width: 500px;
+}
+
+.task-header-delete {
+  width: 40px;
+}
+
 .date-input {
   width: 120px;
 }

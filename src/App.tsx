@@ -256,16 +256,16 @@ function App() {
       <table className="task-table">
         <thead className="task-table">
           <tr>
-            <th scope="col" className="task-table-content">
+            <th scope="col" className="task-table-content task-header-start-date">
               開始時刻
             </th>
-            <th scope="col" className="task-table-content">
+            <th scope="col" className="task-table-content task-header-type">
               分類
             </th>
-            <th scope="col" className="task-table-content ">
+            <th scope="col" className="task-table-content task-header-content">
               内容
             </th>
-            <th scope="col" className="task-table-content">
+            <th scope="col" className="task-table-content task-header-delete">
               削除
             </th>
           </tr>
